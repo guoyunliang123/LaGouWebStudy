@@ -14,7 +14,9 @@ function getArea (r) {
 function memoize (f) {
   let cache = {}; // 用来缓存结果
   return function () {
+    console.log(arguments)
     let key = JSON.stringify(arguments);
+    // 判断每次调用函数时，是否有上一次的缓存结果
     cache[key] = cache[key] || f.apply(f, arguments);
     return cache[key];
   }

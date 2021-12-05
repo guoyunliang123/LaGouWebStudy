@@ -13,20 +13,20 @@ const curried = _.curry(getSum);
 // console.log(curried(1)(2)(3));
 // console.log(curried(1)(2, 3));
 
-let arr = [
-  {name: 'zhangsan', age: 20, num: 1},
-  {name: 'lisi', age: 30, num: 2},
-  {name: 'wangwu', age: 30, num: 3}
-]
-let newArr = [
-  {sex: '女', yh: 'jj', num: 2},
-  {sex: '男', yh: 'zz', num: 3},
-  {sex: '男', yh: 'ss', num: 1},
-]
-let c = arr.map((item, index) => {
-  return {...item, ...newArr[index]}
-})
-console.log(c)
+// let arr = [
+//   {name: 'zhangsan', age: 20, num: 1},
+//   {name: 'lisi', age: 30, num: 2},
+//   {name: 'wangwu', age: 30, num: 3}
+// ]
+// let newArr = [
+//   {sex: '女', yh: 'jj', num: 2},
+//   {sex: '男', yh: 'zz', num: 3},
+//   {sex: '男', yh: 'ss', num: 1},
+// ]
+// let c = arr.map((item, index) => {
+//   return {...item, ...newArr[index]}
+// })
+// console.log(c)
 // add = [
 //   {name: 'zhangsan', age: 20, sex: '男', yh: 'ss'},
 //   {name: 'lisi', age: 30, sex: '女', yh: 'jj'},
