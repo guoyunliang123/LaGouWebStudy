@@ -2,7 +2,7 @@
   "name": "code",
   "version": "1.0.0",
   "description": "",
-  "main": "01-higher-order-function.js",
+  "main": "FUNCTIONAL-PROGRAMMING/01-higher-order-function.js",
   "dependencies": {
     "lodash": "^4.17.21"
   },
