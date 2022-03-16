@@ -4,6 +4,7 @@
   "description": "",
   "main": "FUNCTIONAL-PROGRAMMING/01-higher-order-function.js",
   "dependencies": {
+    "folktale": "^2.3.2",
     "lodash": "^4.17.21"
   },
   "devDependencies": {},
