@@ -16,7 +16,7 @@ function ajax(url) {
   })
 }
 
-// 嵌套使用时 promise 最常见的误区
+// 嵌套使用是 promise 最常见的误区
 ajax('./api/users.json').then(function (urls) {
   ajax(urls.users).then(function (users) {
 
