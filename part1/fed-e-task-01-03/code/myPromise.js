@@ -35,7 +35,13 @@ class MyPromise {
             // 判断状态
             if(this.status === FULFILLED) {
                 let x = successCallback(this.value);
-                resolve(x);
+                /*
+                * 判断 x 的值是普通值还是 promise 对象
+                * 如果是普通值则直接调用 resolve
+                * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                * */
+                resolvePromise(x, resolve, reject);
             } else if (this.status === REJECTED) {
                 failCallback(this.reason);
             } else {
@@ -46,6 +52,17 @@ class MyPromise {
             }
         });
         return promise2;
+    }
+}
+
+function resolvePromise(x, resolve, reject) {
+    if(x instanceof MyPromise) {
+        // promise 对象
+        // x.then(value => {resolve(value)}, reason => {reject(reason)})
+        x.then(resolve, reject)
+    } else {
+        // 普通值
+        resolve(x)
     }
 }
 
