@@ -31,17 +31,21 @@ class MyPromise {
         while (this.failCallback.length) this.failCallback.shift()(this.reason);
     }
     then (successCallback, failCallback) {
-        // 判断状态
-        if(this.status === FULFILLED) {
-            successCallback(this.value)
-        } else if (this.status === REJECTED) {
-            failCallback(this.reason)
-        } else {
-            // 等待状态 为了解决内部中的异步逻辑
-            // 将成功回调和失败回调存储起来
-            this.successCallback.push(successCallback);
-            this.failCallback.push(failCallback);
-        }
+        let promise2 = new MyPromise((resolve, reject) => {
+            // 判断状态
+            if(this.status === FULFILLED) {
+                let x = successCallback(this.value);
+                resolve(x);
+            } else if (this.status === REJECTED) {
+                failCallback(this.reason);
+            } else {
+                // 等待状态 为了解决内部中的异步逻辑
+                // 将成功回调和失败回调存储起来
+                this.successCallback.push(successCallback);
+                this.failCallback.push(failCallback);
+            }
+        });
+        return promise2;
     }
 }
 
