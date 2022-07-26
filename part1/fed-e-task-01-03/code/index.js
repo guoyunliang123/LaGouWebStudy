@@ -14,8 +14,10 @@
 const MyPromise = require('./myPromise');
 
 let promise = new MyPromise((resolve, reject) => {
-    resolve('成功')
-    reject('失败')
+    setTimeout(() => {
+        resolve('成功')
+    }, 2000)
+    // reject('失败')
 })
 
 promise.then(value => {
