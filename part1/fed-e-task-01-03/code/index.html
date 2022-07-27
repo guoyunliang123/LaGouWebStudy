@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Promise 测试</title>
+</head>
+<body>
+
+<!-- 链式调用 promise 方法下面的 then 方法时，在 then 方法的回调函数中，是可以返回 promise 对象的，
+    但是存在一种例外情况，在 then 方法的回调函数中是不可以返回当前这个 then 方法所返回的 promise 对象 -->
+
+    <script>
+        const promise = new Promise(function(resolve, reject) {
+            resolve(100)
+        })
+
+        const p1 = promise.then(function(value) {
+            console.log(value)
+            return p1
+        })
+
+        p1.then(function() {}, function (reason) {
+            console.log(reason.message)
+        })
+    </script>
+</body>
+</html>

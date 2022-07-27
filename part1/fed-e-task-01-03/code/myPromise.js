@@ -34,14 +34,17 @@ class MyPromise {
         let promise2 = new MyPromise((resolve, reject) => {
             // 判断状态
             if(this.status === FULFILLED) {
-                let x = successCallback(this.value);
-                /*
-                * 判断 x 的值是普通值还是 promise 对象
-                * 如果是普通值则直接调用 resolve
-                * 如果是 promise 对象，则需查看 promise 对象返回的结果
-                * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
-                * */
-                resolvePromise(x, resolve, reject);
+                // 加定时器的原因：resolvePromise 方法里面是获取不到 promise2，所以将该处代码处理成异步
+                setTimeout(() => {
+                    let x = successCallback(this.value);
+                    /*
+                    * 判断 x 的值是普通值还是 promise 对象
+                    * 如果是普通值则直接调用 resolve
+                    * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                    * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                    * */
+                    resolvePromise(promise2, x, resolve, reject);
+                }, 0)
             } else if (this.status === REJECTED) {
                 failCallback(this.reason);
             } else {
@@ -55,7 +58,11 @@ class MyPromise {
     }
 }
 
-function resolvePromise(x, resolve, reject) {
+function resolvePromise(promise2, x, resolve, reject) {
+    // 为了判断在当前 promise 返回自己情况下报错
+    if(promise2 === x) {
+        return reject(new TypeError('Chaining cycle detected for promise #<Promise>'))
+    }
     if(x instanceof MyPromise) {
         // promise 对象
         // x.then(value => {resolve(value)}, reason => {reject(reason)})
