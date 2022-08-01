@@ -5,7 +5,11 @@ const REJECTED = 'rejected'; // 失败
 class MyPromise {
     // 使用构造函数接收执行器, 并且执行器是立即执行
     constructor(executor) {
-        executor(this.resolve, this.reject)
+        try {
+            executor(this.resolve, this.reject)
+        } catch (e) {
+            this.reject(e)
+        }
     }
     status = PENDING; // Promise 状态，默认为等待
     value = undefined; // 成功之后的值
@@ -20,7 +24,7 @@ class MyPromise {
         this.value = value; // 保存成功之后的值
         // 判断成功回调是否存在，如果存在，调用
         // this.successCallback && this.successCallback(this.value);
-        while (this.successCallback.length) this.successCallback.shift()(this.value);
+        while (this.successCallback.length) this.successCallback.shift()();
     }
     reject = reason => {
         if(this.status !== PENDING) return; // 如果状态不是等待，则组织程序向下执行
@@ -28,7 +32,7 @@ class MyPromise {
         this.reason = reason; // 保存失败的原因
         // 判断失败回调是否存在，如果存在，调用
         // this.failCallback && this.failCallback(this.reason);
-        while (this.failCallback.length) this.failCallback.shift()(this.reason);
+        while (this.failCallback.length) this.failCallback.shift()();
     }
     then (successCallback, failCallback) {
         let promise2 = new MyPromise((resolve, reject) => {
@@ -36,22 +40,72 @@ class MyPromise {
             if(this.status === FULFILLED) {
                 // 加定时器的原因：resolvePromise 方法里面是获取不到 promise2，所以将该处代码处理成异步
                 setTimeout(() => {
-                    let x = successCallback(this.value);
-                    /*
-                    * 判断 x 的值是普通值还是 promise 对象
-                    * 如果是普通值则直接调用 resolve
-                    * 如果是 promise 对象，则需查看 promise 对象返回的结果
-                    * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
-                    * */
-                    resolvePromise(promise2, x, resolve, reject);
+                    try {
+                        let x = successCallback(this.value);
+                        /*
+                        * 判断 x 的值是普通值还是 promise 对象
+                        * 如果是普通值则直接调用 resolve
+                        * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                        * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                        * */
+                        resolvePromise(promise2, x, resolve, reject);
+                    } catch (e) {
+                        reject(e)
+                    }
                 }, 0)
             } else if (this.status === REJECTED) {
-                failCallback(this.reason);
+                // 加定时器的原因：resolvePromise 方法里面是获取不到 promise2，所以将该处代码处理成异步
+                setTimeout(() => {
+                    try {
+                        let x = failCallback(this.reason);
+                        /*
+                        * 判断 x 的值是普通值还是 promise 对象
+                        * 如果是普通值则直接调用 resolve
+                        * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                        * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                        * */
+                        resolvePromise(promise2, x, resolve, reject);
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 0)
             } else {
                 // 等待状态 为了解决内部中的异步逻辑
                 // 将成功回调和失败回调存储起来
-                this.successCallback.push(successCallback);
-                this.failCallback.push(failCallback);
+                this.successCallback.push(() => {
+                    // 加定时器的原因：resolvePromise 方法里面是获取不到 promise2，所以将该处代码处理成异步
+                    setTimeout(() => {
+                        try {
+                            let x = successCallback(this.value);
+                            /*
+                            * 判断 x 的值是普通值还是 promise 对象
+                            * 如果是普通值则直接调用 resolve
+                            * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                            * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                            * */
+                            resolvePromise(promise2, x, resolve, reject);
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }, 0)
+                });
+                this.failCallback.push(() => {
+                    // 加定时器的原因：resolvePromise 方法里面是获取不到 promise2，所以将该处代码处理成异步
+                    setTimeout(() => {
+                        try {
+                            let x = failCallback(this.reason);
+                            /*
+                            * 判断 x 的值是普通值还是 promise 对象
+                            * 如果是普通值则直接调用 resolve
+                            * 如果是 promise 对象，则需查看 promise 对象返回的结果
+                            * 在根据 promise 对象返回的结果，决定调用 resolve，还是调用 reject
+                            * */
+                            resolvePromise(promise2, x, resolve, reject);
+                        } catch (e) {
+                            reject(e)
+                        }
+                    }, 0)
+                });
             }
         });
         return promise2;

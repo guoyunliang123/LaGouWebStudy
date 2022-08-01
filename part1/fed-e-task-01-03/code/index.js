@@ -16,10 +16,11 @@
 const MyPromise = require('./myPromise');
 
 let promise = new MyPromise((resolve, reject) => {
-    // setTimeout(() => {
-    //     resolve('成功')
-    // }, 2000)
-    resolve('成功')
+    setTimeout(() => {
+        resolve('成功')
+    }, 2000)
+    // throw new Error('executor error')
+    // resolve('成功')
     // reject('失败')
 })
 
@@ -42,19 +43,24 @@ let promise = new MyPromise((resolve, reject) => {
 //     console.log(error)
 // })
 
-function other() {
-    return new MyPromise((resolve, reject) => {
-        resolve('other')
-    })
-}
+// function other() {
+//     return new MyPromise((resolve, reject) => {
+//         resolve('other')
+//     })
+// }
+//
+// let p1 = promise.then(value => {
+//     console.log(value)
+//     return p1;
+// })
 
-let p1 = promise.then(value => {
+promise.then(value => {
     console.log(value)
-    return p1;
-})
-
-p1.then(value => {
-    console.log(value)
+    // throw new Error('then error')
+    return 'aaaa'
 }, reason => {
-    console.log(reason.message)
+    console.log(reason)
+    return 10000
+}).then(value => {
+    console.log(value, 's')
 })
