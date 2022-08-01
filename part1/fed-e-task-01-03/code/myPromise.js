@@ -35,6 +35,8 @@ class MyPromise {
         while (this.failCallback.length) this.failCallback.shift()();
     }
     then (successCallback, failCallback) {
+        successCallback = successCallback ? successCallback : value => value;
+        failCallback = failCallback ? failCallback : reason => { throw reason };
         let promise2 = new MyPromise((resolve, reject) => {
             // 判断状态
             if(this.status === FULFILLED) {

@@ -16,12 +16,12 @@
 const MyPromise = require('./myPromise');
 
 let promise = new MyPromise((resolve, reject) => {
-    setTimeout(() => {
-        resolve('成功')
-    }, 2000)
+    // setTimeout(() => {
+    //     resolve('成功')
+    // }, 2000)
     // throw new Error('executor error')
     // resolve('成功')
-    // reject('失败')
+    reject('失败')
 })
 
 // promise.then(value => {
@@ -54,13 +54,15 @@ let promise = new MyPromise((resolve, reject) => {
 //     return p1;
 // })
 
-promise.then(value => {
-    console.log(value)
-    // throw new Error('then error')
-    return 'aaaa'
-}, reason => {
-    console.log(reason)
-    return 10000
-}).then(value => {
-    console.log(value, 's')
-})
+// promise.then(value => {
+//     console.log(value)
+//     // throw new Error('then error')
+//     return 'aaaa'
+// }, reason => {
+//     console.log(reason)
+//     return 10000
+// }).then(value => {
+//     console.log(value, 's')
+// })
+
+promise.then().then().then(value => console.log(value), reason => console.log(reason))
