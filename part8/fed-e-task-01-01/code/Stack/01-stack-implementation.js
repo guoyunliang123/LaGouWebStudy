@@ -42,6 +42,26 @@ class Stack {
     isEmpty() {
         return this.count === 0
     }
+
+    // top() 用于获取栈顶值
+    top() {
+        if(this.isEmpty()) {
+            console.log('栈为空！')
+            return
+        }
+        return this.data[this.count - 1]
+    }
+
+    // size() 获取数组元素个数
+    size() {
+        return this.count;
+    }
+
+    // clear() 清空栈
+    clear() {
+        this.data = [];
+        this.count = 0;
+    }
 }
 
 const s = new Stack()
